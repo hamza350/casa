@@ -10,6 +10,9 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :invitable, :recoverable, :validatable, :timeoutable, :trackable
 
+  ## Attaching Profile Picture
+  has_one_attached :avatar
+  
   belongs_to :casa_org
 
   has_many :case_assignments, foreign_key: "volunteer_id", dependent: :destroy # TODO destroy is wrong
@@ -26,10 +29,12 @@ class User < ApplicationRecord
 
   has_many :learning_hours, dependent: :destroy
 
+  # supervisor_volunteer association
   has_one :supervisor_volunteer, -> {
     where(is_active: true)
   }, foreign_key: "volunteer_id", dependent: :destroy
   has_one :supervisor, through: :supervisor_volunteer
+
   has_one :preference_set, dependent: :destroy
 
   has_many :user_sms_notification_events
